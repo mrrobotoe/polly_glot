@@ -33,10 +33,11 @@ textarea {
 .app-container {
   display: flex;
   flex-direction: column;
-  max-width: 34rem;
+  max-width: 58rem;
   min-width: 24rem;
   width: 100%;
   height: 100%;
+  container: app-container / inline-size;
 }
 
 .app-header {
@@ -53,10 +54,25 @@ textarea {
 }
 
 .app-content {
-  display: flex;
-  flex-direction: column;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* flex-direction: row; */
   gap: 1rem;
   padding: 1rem;
+}
+
+@container app-container (max-width: 44rem) {
+  .app-content {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
+}
+
+@container app-container (max-width: 34rem) {
+  .app-content {
+    height: 100%;
+  }
 }
 
 .app-translator__label {
