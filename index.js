@@ -9,7 +9,7 @@ const copyIcon = document.querySelector(".js-copy-icon")
 const checkIcon = document.querySelector(".js-check-icon")
 const formEl = document.querySelector(".js-form")
 
-copyButton.disabled = translation.innerText === "" ? true : false
+copyButton.disabled = true
 
 copyButton.addEventListener("click", () => {
   checkIcon.classList.remove("zoom-out")
@@ -94,6 +94,7 @@ function renderTranslation(output) {
       translation.innerText = "Uh oh, something went wrong. Please try again."
     }
     translation.innerText = output.translation
+    copyButton.disabled = false
 }
 
 async function copyTranslation() {
