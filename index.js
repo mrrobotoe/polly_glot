@@ -1,26 +1,48 @@
-const translateBtn = document.getElementById("translateBtn")
-const sendIcon = document.getElementById("sendIcon")
-const translateTextFrom = document.getElementById("translateTextFrom")
-const translatedText = document.getElementById("translatedText")
-const translatedTextLoadingIcon = document.getElementById("translatedTextLoadingIcon")
-const languageSelect = document.getElementById("languageSelect")
-const copyBtn = document.querySelector('sl-copy-button');
-// const copyBtn = document.getElementById("copyBtn")
-const formEl = document.getElementById("translate")
+const submitButton = document.querySelector(".js-submit-button")
+const sendIcon = document.querySelector(".js-send-icon")
+const messageInput = document.querySelector(".js-message-input")
+const translation = document.querySelector(".js-translation")
+const loadingIcon = document.querySelector(".js-loading-icon")
+const languageSelect = document.querySelector(".js-language-select")
+const copyButton = document.querySelector(".js-copy-button")
+const copyIcon = document.querySelector(".js-copy-icon")
+const checkIcon = document.querySelector(".js-check-icon")
+const formEl = document.querySelector(".js-form")
 
-autosize(translateTextFrom);
 
-// copyBtn.addEventListener("click", event => {
-//   console.log("copy btn clicked.")
-// })
+copyButton.addEventListener("click", () => {
+  copyIcon.style.opacity = 0
+  copyIcon.style.scale = 0.8
+  checkIcon.style.opacity = 1
+  checkIcon.style.scale = 1
+  setTimeout(() => {
+    copyIcon.style.opacity = 1
+    copyIcon.style.scale = 1
+    checkIcon.style.opacity = 0
+    checkIcon.style.scale = 0.8
+  }, 1000)
+  navigator.clipboard.writeText(translation.innerText)
+})
+/**
+ * Auto resize textarea
+ */
+document.querySelectorAll("textarea").forEach(function(textarea) {
+  textarea.style.height = textarea.scrollHeight + "px";
+  textarea.style.overflowY = "hidden";
+
+  textarea.addEventListener("input", function() {
+    this.style.height = "auto";
+    this.style.height = this.scrollHeight + "px";
+  });
+});
 
 formEl.addEventListener("submit", event => {
-  translatedText.innerText = ""
   event.preventDefault()
+  translation.innerText = ""
   sendIcon.classList.add("slide-to-right");
-  translateBtn.disabled = true
-  translatedTextLoadingIcon.classList.add("loading");
-  const data = `Please translate the following english text, "${translateTextFrom.value}" to "${languageSelect.value[0].toUpperCase() + languageSelect.value.slice(1)}" text.`
+  submitButton.disabled = true
+  loadingIcon.classList.add("loading");
+  const data = `Please translate the following english text, "${messageInput.value}" to "${languageSelect.value[0].toUpperCase() + languageSelect.value.slice(1)}" text.`
   fetchTranslation(data)
 });
 
@@ -59,11 +81,11 @@ async function fetchTranslation(data) {
       
       renderTranslation(JSON.parse(data.content));
   } catch (err) {
-    translatedText.innerText = "Unable to access AI. Please refresh and try again."
+    translation.innerText = "Unable to access AI. Please refresh and try again."
     sendIcon.classList.remove("slide-to-right");
     sendIcon.classList.add("slide-from-left");
-    translatedTextLoadingIcon.classList.remove("loading");
-    translateBtn.disabled = false
+    loadingIcon.classList.remove("loading");
+    submitButton.disabled = false
 
   }
 }
@@ -71,10 +93,10 @@ async function fetchTranslation(data) {
 function renderTranslation(output) {
     sendIcon.classList.remove("slide-to-right");
     sendIcon.classList.add("slide-from-left");
-    translatedTextLoadingIcon.classList.remove("loading");
-    translateBtn.disabled = false
-    if (output.translation === undefined || output.translation === null) {
-      translatedText.innerText = "Uh oh, something went wrong. Please try again."
+    loadingIcon.classList.remove("loading");
+    submitButton.disabled = false
+    if (output.translation === undefined || output.translation === null || output.translation === "") {
+      translation.innerText = "Uh oh, something went wrong. Please try again."
     }
-    translatedText.innerText = output.translation
+    translation.innerText = output.translation
 }
