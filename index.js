@@ -9,19 +9,14 @@ const copyIcon = document.querySelector(".js-copy-icon")
 const checkIcon = document.querySelector(".js-check-icon")
 const formEl = document.querySelector(".js-form")
 
+copyButton.disabled = translation.innerText === "" ? true : false
 
 copyButton.addEventListener("click", () => {
-  copyIcon.style.opacity = 0
-  copyIcon.style.scale = 0.8
-  checkIcon.style.opacity = 1
-  checkIcon.style.scale = 1
-  setTimeout(() => {
-    copyIcon.style.opacity = 1
-    copyIcon.style.scale = 1
-    checkIcon.style.opacity = 0
-    checkIcon.style.scale = 0.8
-  }, 1000)
-  navigator.clipboard.writeText(translation.innerText)
+  checkIcon.classList.remove("zoom-out")
+  copyIcon.classList.add("zoom-out")
+  checkIcon.classList.add("zoom-in")
+
+  copyTranslation()
 })
 /**
  * Auto resize textarea
@@ -99,4 +94,18 @@ function renderTranslation(output) {
       translation.innerText = "Uh oh, something went wrong. Please try again."
     }
     translation.innerText = output.translation
+}
+
+async function copyTranslation() {
+  try {
+    await navigator.clipboard.writeText(translation.innerText)
+    setTimeout(() => {
+      checkIcon.classList.add("zoom-out")
+      checkIcon.classList.remove("zoom-in")
+      copyIcon.classList.remove("zoom-out")
+      copyIcon.classList.add("zoom-in")
+    }, 1000)
+  } catch (err) {
+    console.error('Failed to copy!', err)
+  }
 }
